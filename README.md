@@ -12,9 +12,8 @@ A modern, responsive, multi‑page portfolio built with HTML, CSS, and JavaScrip
 - `assets/css/style.css` — Styles, layout, animations, and components
 - `assets/js/main.js` — Shared header/footer, theme, and page render logic
 
-## Run Locally
-
-Simply open `index.html` in your browser. No build step required.
+## Live link
+https://portfolio-opal-three-bffnk2zeyt.vercel.app/
 
 ## Customize
 

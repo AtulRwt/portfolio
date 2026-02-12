@@ -117,6 +117,14 @@
         featured: true,
       },
       {
+        title: 'Image-Grounded Breast Cancer Detection System',
+        year: '2025',
+        stack: ['Deep Learning', 'ResNet50', 'FAISS', 'Gradio'],
+        desc: 'End-to-end ultrasound image classifier for benign, malignant, and normal classes with similarity-based confidence support.',
+        link: 'https://github.com/AtulRwt',
+        featured: true,
+      },
+      {
         title: 'Portfolio Website',
         year: '2025',
         stack: ['HTML', 'CSS', 'JavaScript'],
@@ -139,7 +147,11 @@
     'LLM APIs': { icon: 'mdi:robot-happy-outline', emoji: '🤖' },
     'C': { icon: 'mdi:language-c', emoji: '🅲' },
     'DSA': { icon: 'mdi:chart-timeline-variant', emoji: '📈' },
-    'Node.js': { icon: 'logos:nodejs-icon', emoji: '🟩' }
+    'Node.js': { icon: 'logos:nodejs-icon', emoji: '🟩' },
+    'Deep Learning': { icon: 'mdi:brain', emoji: '🧠' },
+    'ResNet50': { icon: 'mdi:layers-triple', emoji: '🧬' },
+    'FAISS': { icon: 'mdi:magnify-scan', emoji: '🔎' },
+    'Gradio': { icon: 'mdi:monitor-dashboard', emoji: '🖥️' }
   };
 
   function iconifySpan(key) {

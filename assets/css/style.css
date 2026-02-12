@@ -9,6 +9,10 @@
   --border: #223041;
   --card: #0e141b;
   --shadow: 0 10px 30px rgba(0,0,0,.35);
+  --glass-bg: rgba(15, 21, 29, 0.55);
+  --glass-stroke: rgba(124, 156, 255, 0.22);
+  --grad-a: rgba(124, 156, 255, 0.22);
+  --grad-b: rgba(0, 209, 178, 0.20);
 }
 
 [data-theme="light"]:root, html[data-theme="light"] {
@@ -21,6 +25,10 @@
   --border: #e5e7eb;
   --card: #ffffff;
   --shadow: 0 10px 30px rgba(17,24,39,.08);
+  --glass-bg: rgba(255, 255, 255, 0.72);
+  --glass-stroke: rgba(59, 130, 246, 0.22);
+  --grad-a: rgba(59, 130, 246, 0.24);
+  --grad-b: rgba(6, 182, 212, 0.20);
 }
 
 * { box-sizing: border-box; }
@@ -37,7 +45,16 @@ body {
 .container { width: min(1100px, 92%); margin: 0 auto; }
 .page main { padding-block: 3rem 4rem; }
 .section { margin-block: 3rem; }
-.section-highlight { background: var(--bg-elev); border: 1px solid var(--border); border-radius: 16px; padding: 1.6rem; }
+.section-highlight {
+  background:
+    radial-gradient(120% 140% at 0% 0%, var(--grad-a), transparent 55%),
+    radial-gradient(120% 140% at 100% 0%, var(--grad-b), transparent 58%),
+    var(--glass-bg);
+  border: 1px solid color-mix(in oklab, var(--glass-stroke) 70%, var(--border));
+  border-radius: 16px;
+  padding: 1.6rem;
+  backdrop-filter: blur(10px) saturate(1.2);
+}
 .section__title { font-size: 1.6rem; margin: 0 0 1rem; letter-spacing: .2px; }
 
 /* Header / Nav */
@@ -98,9 +115,16 @@ body {
   width: 220px; height: 220px; object-fit: cover; border-radius: 50%;
   border: 6px solid var(--bg);
   box-shadow: 0 10px 30px rgba(0,0,0,.25), 0 0 0 8px color-mix(in oklab, var(--accent) 15%, transparent);
-  position: absolute; /* sits centered inside orbit */
-  /* Counter-rotate to keep photo steady while the orbit spins */
-  animation: spin 30s linear infinite reverse;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  /* Keep the portrait centered while counter-rotating against the orbit */
+  animation: counterSpin 30s linear infinite;
+}
+
+@keyframes counterSpin {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(-360deg); }
 }
 
 /* Icon sizing and fallback */
@@ -115,8 +139,23 @@ iconify-icon { font-size: 1.1em; vertical-align: -0.15em; }
 .skills-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
 
 /* Cards */
-.card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 1rem; box-shadow: var(--shadow); transition: transform .15s ease, border-color .15s ease; }
-.card:hover { transform: translateY(-4px); border-color: color-mix(in oklab, var(--accent) 35%, var(--border)); }
+.card {
+  background:
+    linear-gradient(145deg, color-mix(in oklab, var(--grad-a) 45%, transparent), transparent 35%),
+    linear-gradient(320deg, color-mix(in oklab, var(--grad-b) 40%, transparent), transparent 40%),
+    var(--glass-bg);
+  border: 1px solid color-mix(in oklab, var(--glass-stroke) 70%, var(--border));
+  border-radius: 16px;
+  padding: 1rem;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(10px) saturate(1.15);
+  transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease;
+}
+.card:hover {
+  transform: translateY(-4px);
+  border-color: color-mix(in oklab, var(--accent) 40%, var(--glass-stroke));
+  box-shadow: 0 14px 32px color-mix(in oklab, var(--accent) 18%, transparent);
+}
 .card h3 { margin: .2rem 0 .3rem; font-size: 1.05rem; }
 .card p { margin: 0; color: var(--muted); font-size: .95rem; }
 .card .tags { margin-top: .6rem; display: flex; flex-wrap: wrap; gap: .3rem; }
@@ -126,11 +165,11 @@ iconify-icon { font-size: 1.1em; vertical-align: -0.15em; }
 .btn:hover { border-color: color-mix(in oklab, var(--accent) 40%, var(--border)); }
 .btn-primary { background: var(--accent); color: white; border-color: var(--accent); }
 .btn-outline { background: transparent; }
-.btn-soft { background: color-mix(in oklab, var(--accent) 10%, var(--bg-elev)); border-color: color-mix(in oklab, var(--accent) 35%, var(--border)); }
+.btn-soft { background: color-mix(in oklab, var(--accent) 10%, var(--glass-bg)); border-color: color-mix(in oklab, var(--accent) 35%, var(--glass-stroke)); }
 
 /* Chips / Tags */
-.chip { display: inline-flex; gap: .4rem; align-items: center; border: 1px solid var(--border); background: var(--bg-elev); color: var(--text); text-decoration: none; padding: .35rem .6rem; border-radius: 999px; }
-.tag { display: inline-flex; align-items: center; gap: .3rem; font-size: .8rem; padding: .25rem .5rem; border-radius: 999px; border: 1px solid var(--border); background: var(--bg-elev); color: var(--text); }
+.chip { display: inline-flex; gap: .4rem; align-items: center; border: 1px solid color-mix(in oklab, var(--glass-stroke) 70%, var(--border)); background: color-mix(in oklab, var(--glass-bg) 85%, transparent); color: var(--text); text-decoration: none; padding: .35rem .6rem; border-radius: 999px; backdrop-filter: blur(6px) saturate(1.1); }
+.tag { display: inline-flex; align-items: center; gap: .3rem; font-size: .8rem; padding: .25rem .5rem; border-radius: 999px; border: 1px solid color-mix(in oklab, var(--glass-stroke) 65%, var(--border)); background: color-mix(in oklab, var(--glass-bg) 82%, transparent); color: var(--text); }
 .tag .dot { position: static; width: .55rem; height: .55rem; }
 .tag-list { display: flex; flex-wrap: wrap; gap: .5rem; padding-left: 0; list-style: none; }
 

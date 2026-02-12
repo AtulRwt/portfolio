@@ -98,9 +98,16 @@ body {
   width: 220px; height: 220px; object-fit: cover; border-radius: 50%;
   border: 6px solid var(--bg);
   box-shadow: 0 10px 30px rgba(0,0,0,.25), 0 0 0 8px color-mix(in oklab, var(--accent) 15%, transparent);
-  position: absolute; /* sits centered inside orbit */
-  /* Counter-rotate to keep photo steady while the orbit spins */
-  animation: spin 30s linear infinite reverse;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  /* Keep the portrait centered while counter-rotating against the orbit */
+  animation: counterSpin 30s linear infinite;
+}
+
+@keyframes counterSpin {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(-360deg); }
 }
 
 /* Icon sizing and fallback */

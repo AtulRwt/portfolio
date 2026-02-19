@@ -228,13 +228,38 @@
   function setupContactForm() {
     const form = document.getElementById('contact-form');
     const formNote = document.getElementById('form-note');
+    const fallbackLink = document.getElementById('form-fallback-link');
+    const charCount = document.getElementById('char-count');
     if (!form) return;
+    const messageInput = form.querySelector('textarea[name="message"]');
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const defaultBtnText = submitBtn ? submitBtn.textContent : 'Send';
+    const defaultNote = 'Send a direct message to my inbox.';
+
+    const updateCharCount = () => {
+      if (!charCount || !messageInput) return;
+      const current = messageInput.value.trim().length;
+      charCount.textContent = `${current} / 1200 characters`;
+    };
+
+    if (messageInput) {
+      messageInput.addEventListener('input', updateCharCount);
+      updateCharCount();
+    }
 
     const setFormStatus = (message, tone = 'muted') => {
       if (!formNote) return;
       formNote.textContent = message;
       formNote.dataset.tone = tone;
     };
+
+    const hideFallbackLink = () => {
+      if (!fallbackLink) return;
+      fallbackLink.classList.add('hidden');
+      fallbackLink.removeAttribute('href');
+    };
+
+    hideFallbackLink();
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -243,16 +268,26 @@
       const email = fd.get('email')?.toString().trim();
       const message = fd.get('message')?.toString().trim();
       if (!name || !email || !message) {
+        hideFallbackLink();
         setFormStatus('Please complete all fields.', 'error');
         return;
       }
       if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+        hideFallbackLink();
         setFormStatus('Please enter a valid email address.', 'error');
         return;
       }
+      if (message.length < 10) {
+        hideFallbackLink();
+        setFormStatus('Please add a little more detail (minimum 10 characters).', 'error');
+        return;
+      }
 
-      const submitBtn = form.querySelector('button[type="submit"]');
-      if (submitBtn) submitBtn.disabled = true;
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Sending...';
+      }
+      hideFallbackLink();
       setFormStatus('Sending your message…', 'muted');
 
       try {
@@ -273,12 +308,21 @@
 
         setFormStatus('Message sent successfully. Thank you!', 'success');
         form.reset();
+        updateCharCount();
+        hideFallbackLink();
+        setTimeout(() => setFormStatus(defaultNote, 'muted'), 3500);
       } catch (err) {
         const fallback = `mailto:atulrajput5968@gmail.com?subject=${encodeURIComponent(`Portfolio contact from ${name}`)}&body=${encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${message}`)}`;
-        window.location.href = fallback;
-        setFormStatus('Could not reach the email service. Opened your mail app instead.', 'error');
+        if (fallbackLink) {
+          fallbackLink.href = fallback;
+          fallbackLink.classList.remove('hidden');
+        }
+        setFormStatus('Could not reach the email service. You can still send using your mail app.', 'error');
       } finally {
-        if (submitBtn) submitBtn.disabled = false;
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = defaultBtnText;
+        }
       }
     });
   }

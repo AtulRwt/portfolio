@@ -14,15 +14,17 @@
       <section class="section">
         <h1 class="section__title">Contact</h1>
         <p>Have an opportunity or want to collaborate? Drop a message.</p>
-        <form class="contact-form" id="contact-form">
+        <form class="contact-form" id="contact-form" novalidate>
           <div class="form-row">
-            <label>Name<input type="text" name="name" required /></label>
-            <label>Email<input type="email" name="email" required /></label>
+            <label>Name<input type="text" name="name" autocomplete="name" placeholder="Your full name" required /></label>
+            <label>Email<input type="email" name="email" autocomplete="email" placeholder="you@example.com" required /></label>
           </div>
-          <label>Message<textarea name="message" rows="6" required></textarea></label>
+          <label>Message<textarea name="message" rows="6" minlength="10" maxlength="1200" placeholder="Tell me a bit about your project or opportunity..." required></textarea></label>
+          <p class="char-count" id="char-count" aria-live="polite">0 / 1200 characters</p>
           <div class="form-actions">
             <button class="btn btn-primary" type="submit">Send</button>
             <p class="form-note" id="form-note" role="status" aria-live="polite">Send a direct message to my inbox.</p>
+            <a class="btn btn-soft hidden" id="form-fallback-link" href="#">Open email app</a>
           </div>
         </form>
 

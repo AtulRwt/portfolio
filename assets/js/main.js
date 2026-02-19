@@ -224,26 +224,62 @@
     }
   }
 
-  // Contact form demo validation
+  // Contact form email sending
   function setupContactForm() {
     const form = document.getElementById('contact-form');
+    const formNote = document.getElementById('form-note');
     if (!form) return;
-    form.addEventListener('submit', (e) => {
+
+    const setFormStatus = (message, tone = 'muted') => {
+      if (!formNote) return;
+      formNote.textContent = message;
+      formNote.dataset.tone = tone;
+    };
+
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const fd = new FormData(form);
       const name = fd.get('name')?.toString().trim();
       const email = fd.get('email')?.toString().trim();
       const message = fd.get('message')?.toString().trim();
       if (!name || !email || !message) {
-        alert('Please complete all fields.');
+        setFormStatus('Please complete all fields.', 'error');
         return;
       }
       if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
-        alert('Please enter a valid email.');
+        setFormStatus('Please enter a valid email address.', 'error');
         return;
       }
-      alert('Thanks! Your message is ready to be sent. (Demo only)');
-      form.reset();
+
+      const submitBtn = form.querySelector('button[type="submit"]');
+      if (submitBtn) submitBtn.disabled = true;
+      setFormStatus('Sending your message…', 'muted');
+
+      try {
+        const response = await fetch('https://formsubmit.co/ajax/atulrajput5968@gmail.com', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({
+            name,
+            email,
+            message,
+            _subject: `Portfolio contact from ${name}`,
+            _template: 'table',
+            _captcha: 'false',
+          }),
+        });
+
+        if (!response.ok) throw new Error('Email service request failed.');
+
+        setFormStatus('Message sent successfully. Thank you!', 'success');
+        form.reset();
+      } catch (err) {
+        const fallback = `mailto:atulrajput5968@gmail.com?subject=${encodeURIComponent(`Portfolio contact from ${name}`)}&body=${encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${message}`)}`;
+        window.location.href = fallback;
+        setFormStatus('Could not reach the email service. Opened your mail app instead.', 'error');
+      } finally {
+        if (submitBtn) submitBtn.disabled = false;
+      }
     });
   }
 

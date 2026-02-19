@@ -190,6 +190,9 @@ input, textarea { background: var(--bg-elev); color: var(--text); border: 1px so
 input:focus, textarea:focus { outline: 2px solid color-mix(in oklab, var(--accent) 35%, transparent); outline-offset: 1px; }
 .form-actions { display: flex; align-items: center; gap: .8rem; }
 .form-note { color: var(--muted); margin: 0; font-size: .9rem; }
+.form-note[data-tone='success'] { color: #16a34a; }
+.form-note[data-tone='error'] { color: #dc2626; }
+.btn:disabled { opacity: .7; cursor: not-allowed; }
 
 /* Animations */
 .fade-in { opacity: 0; transform: translateY(8px); animation: fadeIn .4s ease forwards; }

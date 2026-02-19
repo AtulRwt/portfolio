@@ -83,6 +83,14 @@
     localStorage.setItem('theme', next);
   }
 
+  function setupNavbarScrollState() {
+    const navBar = document.querySelector('.navbar');
+    if (!navBar) return;
+    const applyState = () => navBar.classList.toggle('scrolled', window.scrollY > 8);
+    applyState();
+    window.addEventListener('scroll', applyState, { passive: true });
+  }
+
   // Data (editable)
   const data = {
     badges: [
@@ -329,6 +337,7 @@
 
   // Initialize all
   renderHeader();
+  setupNavbarScrollState();
   renderFooter();
   renderBadges();
   renderFeatured();
